@@ -17,7 +17,7 @@ async function fetchWorks() {
             console.error("Une erreur est survenue: ", error.message);
         };
     };
-    displaySelectedCards(createCards())
+    displaySelectedCards(0);
 };
 
 // Display the sorting bar
@@ -36,64 +36,41 @@ function sortingBar() {
     parentElement.insertBefore(sortingBar, previousTag.nextSibling);
 };
 
-// function sortingBar() {
-//     const parentElement = document.getElementById("portfolio");
-//     const sortingBar = document.createElement("div");
-//     sortingBar.className = "sortingBar";
-//     sortingBar.innerHTML = `
-//                             <button class="button">Tous</button>
-//                             <button class="button">Objets</button>
-//                             <button class="button">Appartements</button>
-//                             <button class="button">Hôtels & restaurants</button>
-//                         `;
-//     parentElement.appendChild(sortingBar);
-// };
-
 // Set the selected sorting button on page load and upon click.
 function sortingButtonSelector() {
     const sortingBar = document.querySelector(".sortingBar");
     const buttonsList = sortingBar.querySelectorAll("button");
     buttonsList[0].classList.add("buttonSelected");
+    let j = 0;
     buttonsList.forEach(el => {
+        el.id = j;
+        j = j+1
         el.addEventListener("click", () => {
             buttonsList.forEach(e => e.classList.remove("buttonSelected"));
             el.classList.add("buttonSelected")
+            displaySelectedCards(el.id);
         });
     });
 };
 
 // Retrieve data from session storage and create 'card' elements.
-function createCards() {
-    const worksList = JSON.parse(window.sessionStorage.getItem("works"));
-    let cards = [];
-    for (let i = 0; i < worksList.length; i++) {
-        // remplacer cards += par cards.push() et corriger l'affichage
-        cards += `  
-                    <article class="categoryId:${worksList[i].categoryId}" >
-                        <figure>
-                            <img src="${worksList[i].imageUrl}" alt="${worksList[i].title}">
-                            <figcaption>${worksList[i].title}</figcaption>
-                        </figure>
-                    </article>
-                 `;
+function displaySelectedCards(j) {
+    const data = JSON.parse(window.sessionStorage.getItem("works"));
+    const divGallery = document.querySelector(".gallery");
+    let filteredCards = [];
+    for (let i = 0; i < data.length; i++) {
+        if (j == 0 || data[i].categoryId == j) {
+            filteredCards += `
+                                <figure>
+                                    <img src="${data[i].imageUrl}" alt="${data[i].title}">
+                                    <figcaption>${data[i].title}</figcaption>
+                                </figure>
+                             `;
+        };
     };
-    return cards;
+    divGallery.innerHTML = filteredCards;
 };
 
-// Display the cards based on the selected sort button.
-function displaySelectedCards(cards) {
-    const gallery = document.querySelector(".gallery");
-    // let displayedCards = [];
-    // cards.forEach(el => {
-    //     if(el.classList.contains("buttonSelected")) {
-    //         displayedCards.push(el);
-    //     };
-    // });
-    // gallery.innerHTML = displayedCards;
-    gallery.innerHTML = cards;
-};
-
-// Is it really useful to explain it ?
 function mainFunction() {
     fetchWorks();
     sortingBar();
