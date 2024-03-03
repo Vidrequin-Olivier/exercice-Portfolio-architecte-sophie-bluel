@@ -71,10 +71,30 @@ function displaySelectedCards(j) {
     divGallery.innerHTML = filteredCards;
 };
 
+function loginEventListener() {
+    const login = document.querySelector("header li:nth-of-type(3)");
+    login.addEventListener("click", () => displayLoginPage());
+};
+
+function displayLoginPage() {
+    const mainTag = document.querySelector("main");
+    const parentElement = document.querySelector("body");
+    const footerTag = document.querySelector("footer");
+    const loginPage = createLoginPage();
+    mainTag.style.display = "none";
+    parentElement.insertBefore(loginPage, footerTag);
+};
+
+function createLoginPage() {
+    const loginPage = document.createElement("div");
+    return loginPage;
+};
+
 function mainFunction() {
     fetchWorks();
     sortingBar();
     sortingButtonSelector();
+    loginEventListener();
 };
 
 mainFunction();
