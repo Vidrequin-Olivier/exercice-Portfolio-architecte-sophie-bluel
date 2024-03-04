@@ -242,6 +242,7 @@ body {
 
 .loginPage {
 	width: 100%;
+	margin: 50px 0 250px;
 	display: none;
 	flex-direction: column;
 	align-items: center;
@@ -271,6 +272,18 @@ body {
 }
 
 button[type="submit"] {
+	width: 180px;
+	margin: 37px auto 28px;
 	align-self: center;
 	background-color: var(--main-color);
+}
+
+.loginPage a {
+	color: black;
+	text-decoration: underline;
+}
+
+.backToMainPage {
+	margin-top: 30px;
+	padding: 9px 20px;
 }

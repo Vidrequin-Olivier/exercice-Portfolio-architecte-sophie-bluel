@@ -84,10 +84,10 @@ function createLoginPage() {
             <input type="" id=""required>
             <p>Mot de passe</p>
             <input type="" id=""required>
-            <button type="submit">Se connecter</button>
+            <button type="submit" class="button buttonSelected">Se connecter</button>
         </form>
-        <button>Mot de passe oublié</button>
-        <button class="backToMainPage">Retour à la page d'acceuil</button>
+        <a href="#">Mot de passe oublié</a>
+        <button class="backToMainPage button buttonSelected">Retour à la page d'acceuil</button>
     `
     parentElement.insertBefore(loginPage, footerTag);
 };
@@ -100,10 +100,12 @@ function pageLayout() {
     const backToMainPage = document.querySelector(".backToMainPage");
     backToMainPage.addEventListener("click", () => {
         loginPage.style.display = "none";
+        login.style.fontWeight = "400";
         mainTag.style.display = "block";
     });
     login.addEventListener("click", () => {
         mainTag.style.display = "none";
+        login.style.fontWeight = "600";
         loginPage.style.display = "flex";
     });
 };
