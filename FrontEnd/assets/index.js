@@ -92,25 +92,19 @@ function createLoginPage() {
     parentElement.insertBefore(loginPage, footerTag);
 };
 
-// Manages hiding the 'main' tag and displaying the login section when clicking the button.
-function displayLoginPage() {
+// Display main or section tag and hides the other tag.
+function pageLayout() {
     const login = document.querySelector("header li:nth-of-type(3)");
     const mainTag = document.querySelector("main");
     const loginPage = document.querySelector(".loginPage");
+    const backToMainPage = document.querySelector(".backToMainPage");
+    backToMainPage.addEventListener("click", () => {
+        loginPage.style.display = "none";
+        mainTag.style.display = "block";
+    });
     login.addEventListener("click", () => {
         mainTag.style.display = "none";
         loginPage.style.display = "flex";
-    });
-};
-
-// Manages hiding the login section and displaying the 'main' tag when clicking the button.
-function displayMainPage() {
-    const backToMainPage = document.querySelector(".backToMainPage");
-    const main = document.querySelector("main");
-    const loginPage = document.querySelector(".loginPage");
-    backToMainPage.addEventListener("click", () => {
-        loginPage.style.display = "none";
-        main.style.display = "block";
     });
 };
 
@@ -119,8 +113,7 @@ function mainFunction() {
     sortingBar();
     sortingButtonSelector();
     createLoginPage();
-    displayLoginPage();
-    displayMainPage();
+    pageLayout();
 };
 
 mainFunction();
