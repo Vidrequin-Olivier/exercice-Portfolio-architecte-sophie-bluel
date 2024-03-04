@@ -71,30 +71,56 @@ function displaySelectedCards(j) {
     divGallery.innerHTML = filteredCards;
 };
 
-function loginEventListener() {
-    const login = document.querySelector("header li:nth-of-type(3)");
-    login.addEventListener("click", () => displayLoginPage());
-};
-
-function displayLoginPage() {
-    const mainTag = document.querySelector("main");
+// Create the content for the login section.
+function createLoginPage() {
     const parentElement = document.querySelector("body");
     const footerTag = document.querySelector("footer");
-    const loginPage = createLoginPage();
-    mainTag.style.display = "none";
+    const loginPage = document.createElement("section");
+    loginPage.className = "loginPage";
+    loginPage.innerHTML = `
+        <h2>Log In</h2>
+        <form class="loginForm">
+            <p>E-mail</p>
+            <input type="" id=""required>
+            <p>Mot de passe</p>
+            <input type="" id=""required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <button>Mot de passe oublié</button>
+        <button class="backToMainPage">Retour à la page d'acceuil</button>
+    `
     parentElement.insertBefore(loginPage, footerTag);
 };
 
-function createLoginPage() {
-    const loginPage = document.createElement("div");
-    return loginPage;
+// Manages hiding the 'main' tag and displaying the login section when clicking the button.
+function displayLoginPage() {
+    const login = document.querySelector("header li:nth-of-type(3)");
+    const mainTag = document.querySelector("main");
+    const loginPage = document.querySelector(".loginPage");
+    login.addEventListener("click", () => {
+        mainTag.style.display = "none";
+        loginPage.style.display = "flex";
+    });
+};
+
+// Manages hiding the login section and displaying the 'main' tag when clicking the button.
+function displayMainPage() {
+    const backToMainPage = document.querySelector(".backToMainPage");
+    const main = document.querySelector("main");
+    const loginPage = document.querySelector(".loginPage");
+    backToMainPage.addEventListener("click", () => {
+        loginPage.style.display = "none";
+        main.style.display = "block";
+    });
 };
 
 function mainFunction() {
     fetchWorks();
     sortingBar();
     sortingButtonSelector();
-    loginEventListener();
+    createLoginPage();
+    displayLoginPage();
+    displayMainPage();
 };
 
 mainFunction();

@@ -188,8 +188,14 @@ footer nav ul {
 
 /* My CSS rules */
 :root {
+	--main-background-color: #FFFEF8;
     --main-color: #1D6154;
 	--main-font: 'Syne';
+	--box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+body {
+	background-color: var(--main-background-color);
 }
 
 #portfolio {
@@ -224,12 +230,47 @@ footer nav ul {
 	border: 1px solid var(--main-color);
 	border-radius: 60px;
 	color: var(--main-color);
-	background-color: white;
+	background-color: transparent;
 	font-size: 16px;
 	font-family: var(--main-font);
 }
 
 .buttonSelected {
 	color: white;
+	background-color: var(--main-color);
+}
+
+.loginPage {
+	width: 100%;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+}
+
+.loginPage h2 {
+	margin: 100px auto 7px;
+}
+
+.loginForm {
+	width: clamp(1px, 100%, 380px);
+	display: flex;
+	flex-direction: column;
+	align-items: baseline;
+}
+
+.loginForm p {
+	margin: 30px 0 7px;
+}
+
+.loginForm input {
+	width: 100%;
+	height: 50px;
+	border: none;
+	box-shadow: var(--box-shadow);
+
+}
+
+button[type="submit"] {
+	align-self: center;
 	background-color: var(--main-color);
 }
