@@ -36,7 +36,7 @@ function sortingBar() {
     parentElement.insertBefore(sortingBar, previousTag.nextSibling);
 };
 
-// Set the selected sorting button on page load and upon click.
+// Define the selected sorting button on page load and upon click.
 function sortingButtonSelector() {
     const sortingBar = document.querySelector(".sortingBar");
     const buttonsList = sortingBar.querySelectorAll("button");
@@ -81,9 +81,9 @@ function createLoginPage() {
         <h2>Log In</h2>
         <form class="loginForm">
             <p>E-mail</p>
-            <input type="" id=""required>
+            <input type="text" id="emailInput" autofocus required>
             <p>Mot de passe</p>
-            <input type="" id=""required>
+            <input type="password" id="passwordInput" required>
             <button type="submit" class="button buttonSelected">Se connecter</button>
         </form>
         <a href="#">Mot de passe oublié</a>
@@ -110,12 +110,76 @@ function pageLayout() {
     });
 };
 
+// Information entered by the user in the login form.
+let userEmailInput = "";
+let userPasswordInput = "";
+
+// Listen for inputs and update the corresponding variables.
+function loginEventListener() {
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    emailInput.addEventListener("change", (e) => {
+        userEmailInput = e.target.value;
+    });
+    passwordInput.addEventListener("change", (e) => {
+        userPasswordInput = e.target.value;
+    });
+};
+
+// form submission management.
+function formSubmission() {
+    const loginForm = document.querySelector(".loginForm");
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let userInformations = {
+            "email": userEmailInput,
+            "password": userPasswordInput
+        };
+        userInformations = JSON.stringify(userInformations);
+        connectionAttempt(userInformations);
+    });
+};
+
+// Sending the connection request upon form submission.
+async function connectionAttempt(userInformations) {
+    const apiAddress = "http://localhost:5678/api/users/login";
+    try {
+        const response = await fetch(apiAddress, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: userInformations
+        });
+        const responseStatus = response.status;
+        switch (responseStatus) {
+            case 200:
+                const responseData = await response.json();
+                const loginToken = JSON.stringify(responseData);
+                window.sessionStorage.setItem("loginToken", loginToken);
+                console.log(window.sessionStorage.getItem("loginToken"));
+                break
+            case 401:
+                alert("Echec de la requète.");
+                break
+            case 404:
+                alert("Nom utilisateur ou mot de passe incorrect.");
+                break
+            default:
+                alert(`Réponse serveur non valide: ${response.statusText}.`);
+        }
+    } catch (error) {
+        alert(`Une erreur est survenue: ${error.message}.`);
+        return false;
+    };
+};
+
 function mainFunction() {
     fetchWorks();
     sortingBar();
     sortingButtonSelector();
     createLoginPage();
     pageLayout();
+    loginEventListener();
+    formSubmission();
 };
 
 mainFunction();
