@@ -1,4 +1,4 @@
-// fetch works from backend
+// Fetch works from backend
 async function fetchWorks() {
     let data = window.sessionStorage.getItem("works");
     if (data === null || data === "null") {
@@ -23,8 +23,7 @@ async function fetchWorks() {
 // Display the sorting bar
 function sortingBar() {
     const parentElement = document.getElementById("portfolio");
-    const h2 = parentElement.getElementsByTagName("h2");
-    const previousTag = h2[0];
+    const gallery = document.querySelector(".gallery");
     const sortingBar = document.createElement("div");
     sortingBar.className = "sortingBar";
     sortingBar.innerHTML = `
@@ -33,7 +32,7 @@ function sortingBar() {
                             <button class="button">Appartements</button>
                             <button class="button">Hôtels & restaurants</button>
                         `;
-    parentElement.insertBefore(sortingBar, previousTag.nextSibling);
+    parentElement.insertBefore(sortingBar, gallery);
 };
 
 // Define the selected sorting button on page load and upon click.
@@ -41,34 +40,32 @@ function sortingButtonSelector() {
     const sortingBar = document.querySelector(".sortingBar");
     const buttonsList = sortingBar.querySelectorAll("button");
     buttonsList[0].classList.add("buttonSelected");
-    let j = 0;
+    let buttonCategoryId = 0;
     buttonsList.forEach(el => {
-        el.id = j;
-        j = j+1
+        el.id = buttonCategoryId;
+        buttonCategoryId += 1
         el.addEventListener("click", () => {
             buttonsList.forEach(e => e.classList.remove("buttonSelected"));
-            el.classList.add("buttonSelected")
+            el.classList.add("buttonSelected");
             displaySelectedCards(el.id);
         });
     });
 };
 
 // Retrieve data from session storage and create 'card' elements.
-function displaySelectedCards(j) {
+function displaySelectedCards(buttonCategoryId) {
     const data = JSON.parse(window.sessionStorage.getItem("works"));
     const divGallery = document.querySelector(".gallery");
-    let filteredCards = [];
-    for (let i = 0; i < data.length; i++) {
-        if (j == 0 || data[i].categoryId == j) {
-            filteredCards += `
-                                <figure>
-                                    <img src="${data[i].imageUrl}" alt="${data[i].title}">
-                                    <figcaption>${data[i].title}</figcaption>
-                                </figure>
-                             `;
-        };
-    };
-    divGallery.innerHTML = filteredCards;
+
+    divGallery.innerHTML = data
+        .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
+        .map(card => `
+            <figure>
+                <img src="${card.imageUrl}" alt="${card.title}">
+                <figcaption>${card.title}</figcaption>
+            </figure>
+        `)
+        .join("");
 };
 
 // Create the content for the login section.
@@ -76,6 +73,7 @@ function createLoginPage() {
     const parentElement = document.querySelector("body");
     const footerTag = document.querySelector("footer");
     const loginPage = document.createElement("section");
+
     loginPage.className = "loginPage";
     loginPage.innerHTML = `
         <h2>Log In</h2>
@@ -88,7 +86,7 @@ function createLoginPage() {
         </form>
         <a href="#">Mot de passe oublié</a>
         <button class="backToMainPage button buttonSelected">Retour à la page d'acceuil</button>
-    `
+    `;
     parentElement.insertBefore(loginPage, footerTag);
 };
 
@@ -98,16 +96,27 @@ function pageLayout() {
     const mainTag = document.querySelector("main");
     const loginPage = document.querySelector(".loginPage");
     const backToMainPage = document.querySelector(".backToMainPage");
+
     backToMainPage.addEventListener("click", () => {
-        loginPage.style.display = "none";
-        login.style.fontWeight = "400";
-        mainTag.style.display = "block";
+        displayMainTag(loginPage, login, mainTag);
     });
     login.addEventListener("click", () => {
-        mainTag.style.display = "none";
-        login.style.fontWeight = "600";
-        loginPage.style.display = "flex";
+        displaySectionTag(mainTag, login, loginPage);
     });
+};
+
+// Display main tag and hides section tag.
+function displayMainTag(loginPage, login, mainTag) {
+    loginPage.style.display = "none";
+    login.style.fontWeight = "400";
+    mainTag.style.display = "block";
+};
+
+// Display section tag and hides main tag.
+function displaySectionTag(mainTag, login, loginPage) {
+    mainTag.style.display = "none";
+    login.style.fontWeight = "600";
+    loginPage.style.display = "flex";
 };
 
 // Information entered by the user in the login form.
@@ -117,16 +126,16 @@ let userPasswordInput = "";
 // Listen for inputs and update the corresponding variables.
 function loginEventListener() {
     const emailInput = document.getElementById("emailInput");
-    const passwordInput = document.getElementById("passwordInput");
     emailInput.addEventListener("change", (e) => {
         userEmailInput = e.target.value;
     });
+    const passwordInput = document.getElementById("passwordInput");
     passwordInput.addEventListener("change", (e) => {
         userPasswordInput = e.target.value;
     });
 };
 
-// form submission management.
+// Form submission management.
 function formSubmission() {
     const loginForm = document.querySelector(".loginForm");
     loginForm.addEventListener("submit", (e) => {
@@ -155,7 +164,7 @@ async function connectionAttempt(userInformations) {
                 const responseData = await response.json();
                 const loginToken = JSON.stringify(responseData);
                 window.sessionStorage.setItem("loginToken", loginToken);
-                console.log(window.sessionStorage.getItem("loginToken"));
+                displayConnectedState();
                 break
             case 401:
                 alert("Echec de la requète.");
@@ -170,6 +179,19 @@ async function connectionAttempt(userInformations) {
         alert(`Une erreur est survenue: ${error.message}.`);
         return false;
     };
+};
+
+function displayConnectedState() {
+    const login = document.querySelector("header li:nth-of-type(3)");
+    const mainTag = document.querySelector("main");
+    const loginPage = document.querySelector(".loginPage");
+    displayMainTag(loginPage, login, mainTag);
+
+    const editingModeBanner = document.createElement("div");
+    editingModeBanner.className = "editingModeBanner";
+    editingModeBanner.innerHTML = `Mode édition`;
+    const header = document.querySelector("header");
+    header.insertAdjacentHTML("afterbegin", editingModeBanner);
 };
 
 function mainFunction() {
