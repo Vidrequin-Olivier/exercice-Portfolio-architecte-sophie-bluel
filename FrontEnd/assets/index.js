@@ -20,7 +20,33 @@ async function fetchWorks() {
     displaySelectedCards(0);
 };
 
-// Display the sorting bar
+function editingModeBanner() {
+    const body = document.querySelector("body");
+    body.insertAdjacentHTML("beforebegin", `
+        <div class="editingModeBanner">
+            <p><i class="fa-regular fa-pen-to-square"></i>Mode édition</p>
+        </div>`
+    );
+};
+
+// Creates a logout button.
+function logoutButton() {
+    const logoutButton = document.createElement("li");
+    logoutButton.className = "logoutButton";
+    logoutButton.innerHTML = "logout";
+    logoutButton.addEventListener("click", () => {
+        logout();
+    });
+    return logoutButton;
+};
+
+// Creates the edit projects button.
+function editProjects() {
+    const mesProjets = document.querySelector("#portfolio h2");
+    mesProjets.insertAdjacentHTML("afterend", '<p class="editProjects"><i class="fa-regular fa-pen-to-square"></i>modifier</p>');
+};
+
+// Creates and display the sorting bar
 function sortingBar() {
     const parentElement = document.getElementById("portfolio");
     const gallery = document.querySelector(".gallery");
@@ -92,30 +118,35 @@ function createLoginPage() {
 
 // Display main or section tag and hides the other tag.
 function pageLayout() {
-    const login = document.querySelector("header li:nth-of-type(3)");
-    const mainTag = document.querySelector("main");
-    const loginPage = document.querySelector(".loginPage");
-    const backToMainPage = document.querySelector(".backToMainPage");
-
-    backToMainPage.addEventListener("click", () => {
-        displayMainTag(loginPage, login, mainTag);
+    const loginButton = document.querySelector("header li:nth-of-type(3)");
+    loginButton.className = "loginButton"
+    loginButton.insertAdjacentElement("afterend", logoutButton());
+    loginButton.addEventListener("click", () => {
+        displaySectionTag();
     });
-    login.addEventListener("click", () => {
-        displaySectionTag(mainTag, login, loginPage);
+    const backToMainPage = document.querySelector(".backToMainPage");
+    backToMainPage.addEventListener("click", () => {
+        displayMainTag();
     });
 };
 
 // Display main tag and hides section tag.
-function displayMainTag(loginPage, login, mainTag) {
+function displayMainTag() {
+    const loginPage = document.querySelector(".loginPage");
+    const loginButton = document.querySelector(".loginButton");
+    const mainTag = document.querySelector("main");
     loginPage.style.display = "none";
-    login.style.fontWeight = "400";
+    loginButton.style.fontWeight = "400";
     mainTag.style.display = "block";
 };
 
 // Display section tag and hides main tag.
-function displaySectionTag(mainTag, login, loginPage) {
+function displaySectionTag() {
+    const mainTag = document.querySelector("main");
+    const loginButton = document.querySelector(".loginButton");
+    const loginPage = document.querySelector(".loginPage");
     mainTag.style.display = "none";
-    login.style.fontWeight = "600";
+    loginButton.style.fontWeight = "600";
     loginPage.style.display = "flex";
 };
 
@@ -182,20 +213,47 @@ async function connectionAttempt(userInformations) {
 };
 
 function displayConnectedState() {
-    const login = document.querySelector("header li:nth-of-type(3)");
-    const mainTag = document.querySelector("main");
-    const loginPage = document.querySelector(".loginPage");
-    displayMainTag(loginPage, login, mainTag);
+    displayMainTag();
+    const editingModeBanner = document.querySelector(".editingModeBanner");
+    editingModeBanner.style.display = "flex"
+    loginToLogout();
+    const sortingBar = document.querySelector(".sortingBar");
+    sortingBar.style.display = "none";
+    const editProjects = document.querySelector(".editProjects");
+    editProjects.style.display = "block"
+};
 
-    const editingModeBanner = document.createElement("div");
-    editingModeBanner.className = "editingModeBanner";
-    editingModeBanner.innerHTML = `Mode édition`;
-    const header = document.querySelector("header");
-    header.insertAdjacentHTML("afterbegin", editingModeBanner);
+// Switch from "login" to "logout"
+function loginToLogout() {
+    const loginButton = document.querySelector(".loginButton")
+    loginButton.style.display = "none";
+    const logoutButton = document.querySelector(".logoutButton")
+    logoutButton.style.display = "inline";
+};
+
+function logout() {
+    window.sessionStorage.removeItem("loginToken");
+    const editingModeBanner = document.querySelector(".editingModeBanner");
+    editingModeBanner.style.display = "none";
+    logoutToLogin();
+    const sortingBar = document.querySelector(".sortingBar");
+    sortingBar.style.display = "flex";
+    const editProjects = document.querySelector(".editProjects");
+    editProjects.style.display = "none";
+};
+
+// Switch from "login" to "logout"
+function logoutToLogin() {
+    const logoutButton = document.querySelector(".logoutButton")
+    logoutButton.style.display = "none";
+    const loginButton = document.querySelector(".loginButton")
+    loginButton.style.display = "inline";
 };
 
 function mainFunction() {
     fetchWorks();
+    editingModeBanner();
+    editProjects();
     sortingBar();
     sortingButtonSelector();
     createLoginPage();
