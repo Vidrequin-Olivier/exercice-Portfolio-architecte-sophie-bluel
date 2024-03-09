@@ -17,7 +17,7 @@ async function fetchWorks() {
             console.error("Une erreur est survenue: ", error.message);
         };
     };
-    displaySelectedCards(0);
+    displaySelectedCards(0, ".gallery");
 };
 
 function editingModeBanner() {
@@ -41,9 +41,14 @@ function logoutButton() {
 };
 
 // Creates the edit projects button.
-function editProjects() {
+function editProjectsButton() {
     const mesProjets = document.querySelector("#portfolio h2");
-    mesProjets.insertAdjacentHTML("afterend", '<p class="editProjects"><i class="fa-regular fa-pen-to-square"></i>modifier</p>');
+    mesProjets.insertAdjacentHTML("afterend", '<p class="editProjectsButton"><i class="fa-regular fa-pen-to-square"></i>modifier</p>');
+    const editProjectsButton = document.querySelector(".editProjectsButton");
+    editProjectsButton.addEventListener("click", () => {
+        const projectsModalBackground = document.querySelector(".projectsModalBackground");
+        projectsModalBackground.style.display = "flex"
+    })
 };
 
 // Creates and display the sorting bar
@@ -73,17 +78,17 @@ function sortingButtonSelector() {
         el.addEventListener("click", () => {
             buttonsList.forEach(e => e.classList.remove("buttonSelected"));
             el.classList.add("buttonSelected");
-            displaySelectedCards(el.id);
+            displaySelectedCards(el.id, ".gallery");
         });
     });
 };
 
 // Retrieve data from session storage and create 'card' elements.
-function displaySelectedCards(buttonCategoryId) {
+function displaySelectedCards(buttonCategoryId, target) {
     const data = JSON.parse(window.sessionStorage.getItem("works"));
-    const divGallery = document.querySelector(".gallery");
+    const targetSelector = document.querySelector(`${target}`);
 
-    divGallery.innerHTML = data
+    targetSelector.innerHTML = data
         .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
         .map(card => `
             <figure>
@@ -126,6 +131,7 @@ function pageLayout() {
     });
     const backToMainPage = document.querySelector(".backToMainPage");
     backToMainPage.addEventListener("click", () => {
+        clearInputsEntries();
         displayMainTag();
     });
 };
@@ -219,8 +225,8 @@ function displayConnectedState() {
     loginToLogout();
     const sortingBar = document.querySelector(".sortingBar");
     sortingBar.style.display = "none";
-    const editProjects = document.querySelector(".editProjects");
-    editProjects.style.display = "block"
+    const editProjectsButton = document.querySelector(".editProjectsButton");
+    editProjectsButton.style.display = "block"
 };
 
 // Switch from "login" to "logout"
@@ -238,8 +244,9 @@ function logout() {
     logoutToLogin();
     const sortingBar = document.querySelector(".sortingBar");
     sortingBar.style.display = "flex";
-    const editProjects = document.querySelector(".editProjects");
-    editProjects.style.display = "none";
+    const editProjectsButton = document.querySelector(".editProjectsButton");
+    editProjectsButton.style.display = "none";
+    clearInputsEntries();
 };
 
 // Switch from "login" to "logout"
@@ -250,16 +257,52 @@ function logoutToLogin() {
     loginButton.style.display = "inline";
 };
 
+// Clear the login form inputs.
+function clearInputsEntries() {
+    const inputEntries = document.querySelectorAll(".loginForm input");
+    inputEntries.forEach( el => {
+        el.value = "";
+    });
+};
+
+// Creates the project editing modal window.
+function createProjectsModal() {
+    const body = document.querySelector("body");
+    body.insertAdjacentHTML("afterbegin", `
+        <section class="projectsModalBackground">
+            <div class="projectsModal">
+
+            </div>
+        </section>
+    `);
+    const projectsModalBackground = document.querySelector(".projectsModalBackground");
+    projectsModalBackground.addEventListener("click", () => {
+        closeProjectsModal();
+    });
+    const projectsModal = document.querySelector(".projectsModal");
+    projectsModal.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    displaySelectedCards(0, ".projectsModal");
+};
+
+// Hide editing projects modal.
+function closeProjectsModal() {
+    const projectsModalBackground = document.querySelector(".projectsModalBackground");
+    projectsModalBackground.style.display = "none";
+};
+
 function mainFunction() {
     fetchWorks();
     editingModeBanner();
-    editProjects();
+    editProjectsButton();
     sortingBar();
     sortingButtonSelector();
     createLoginPage();
     pageLayout();
     loginEventListener();
     formSubmission();
+    createProjectsModal();
 };
 
 mainFunction();

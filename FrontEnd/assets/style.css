@@ -192,6 +192,7 @@ footer nav ul {
     --main-color: #1D6154;
 	--main-font: 'Syne';
 	--box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	--modalBabkgroundColor: rgba(0, 0, 0, 0.3);
 }
 
 .editingModeBanner {
@@ -233,7 +234,7 @@ header {
 	position: relative;
 }
 
-.editProjects {
+.editProjectsButton {
 	position: absolute;
 	right: -120px;
 	top: 10px;
@@ -325,4 +326,26 @@ button[type="submit"] {
 .backToMainPage {
 	margin-top: 30px;
 	padding: 9px 20px;
+}
+
+.projectsModalBackground {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: var(--modalBabkgroundColor);
+	display: none;
+	justify-content: center;
+	z-index: 9;
+}
+
+.projectsModal {
+	width: clamp(1px, 100%, 630px);
+	margin: 590px 5vw;
+	border-radius: 10px;
+	background-color: var(--main-background-color);
+	z-index: 10;
+
 }
