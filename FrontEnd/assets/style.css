@@ -342,10 +342,28 @@ button[type="submit"] {
 }
 
 .projectsModal {
-	width: clamp(1px, 100%, 630px);
+	width: clamp(1px, 100%, 420px);
+	height: fit-content;
 	margin: 590px 5vw;
+	padding: 60px 105px 45px;
 	border-radius: 10px;
 	background-color: var(--main-background-color);
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
 	z-index: 10;
+}
 
+.projectsModal figure {
+	width: 76px;
+	height: 102px;
+	margin-bottom: 30px;
+}
+
+.projectsModal img {
+	width: 100%;
+}
+
+.projectsModal figcaption {
+	display: none;
 }

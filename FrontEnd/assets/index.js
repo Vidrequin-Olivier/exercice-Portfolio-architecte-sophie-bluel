@@ -271,7 +271,7 @@ function createProjectsModal() {
     body.insertAdjacentHTML("afterbegin", `
         <section class="projectsModalBackground">
             <div class="projectsModal">
-
+            
             </div>
         </section>
     `);
