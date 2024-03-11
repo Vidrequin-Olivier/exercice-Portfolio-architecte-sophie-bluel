@@ -20,6 +20,7 @@ async function fetchWorks() {
     displaySelectedCards(0, ".gallery");
 };
 
+// Creates a header banner in edit mode.
 function editingModeBanner() {
     const body = document.querySelector("body");
     body.insertAdjacentHTML("beforebegin", `
@@ -48,6 +49,7 @@ function editProjectsButton() {
     editProjectsButton.addEventListener("click", () => {
         const projectsModalBackground = document.querySelector(".projectsModalBackground");
         projectsModalBackground.style.display = "flex"
+        displaySelectedCards(0, ".projectsModalGallery");
     })
 };
 
@@ -86,17 +88,20 @@ function sortingButtonSelector() {
 // Retrieve data from session storage and create 'card' elements.
 function displaySelectedCards(buttonCategoryId, target) {
     const data = JSON.parse(window.sessionStorage.getItem("works"));
-    const targetSelector = document.querySelector(`${target}`);
-
-    targetSelector.innerHTML = data
-        .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
-        .map(card => `
-            <figure>
-                <img src="${card.imageUrl}" alt="${card.title}">
-                <figcaption>${card.title}</figcaption>
-            </figure>
-        `)
-        .join("");
+    if (data) {
+        const targetSelector = document.querySelector(`${target}`);
+        targetSelector.innerHTML = data
+            .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
+            .map(card => `
+                <figure>
+                    <img src="${card.imageUrl}" alt="${card.title}">
+                    <figcaption>${card.title}</figcaption>
+                </figure>
+            `)
+            .join("");
+    } else {
+        alert("Les projets n'ont pas put être chargés correctement. Merci de patienter quelques instant et de réactualiser la page.");
+    }
 };
 
 // Create the content for the login section.
@@ -218,6 +223,7 @@ async function connectionAttempt(userInformations) {
     };
 };
 
+// Changes the display when in edit mode.
 function displayConnectedState() {
     displayMainTag();
     const editingModeBanner = document.querySelector(".editingModeBanner");
@@ -237,6 +243,7 @@ function loginToLogout() {
     logoutButton.style.display = "inline";
 };
 
+// Logs out the user, deletes login information and displays the home page.
 function logout() {
     window.sessionStorage.removeItem("loginToken");
     const editingModeBanner = document.querySelector(".editingModeBanner");
@@ -271,25 +278,48 @@ function createProjectsModal() {
     body.insertAdjacentHTML("afterbegin", `
         <section class="projectsModalBackground">
             <div class="projectsModal">
-            
+                <button class="closeModalButton">
+                    <i class="fa-solid fa-xl fa-xmark"></i>
+                </button>
+                <h2>Galerie photo</h2>
+                <div class="projectsModalGallery"></div>
+                <div class="line"></div>
+                <button class="addNewProject">Ajouter une photo</button>
             </div>
         </section>
     `);
-    const projectsModalBackground = document.querySelector(".projectsModalBackground");
-    projectsModalBackground.addEventListener("click", () => {
-        closeProjectsModal();
-    });
-    const projectsModal = document.querySelector(".projectsModal");
-    projectsModal.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-    displaySelectedCards(0, ".projectsModal");
+    addModalListeners();
+    addDeleteIcons();
 };
 
 // Hide editing projects modal.
 function closeProjectsModal() {
-    const projectsModalBackground = document.querySelector(".projectsModalBackground");
-    projectsModalBackground.style.display = "none";
+    document.querySelector(".projectsModalBackground").style.display = "none";
+};
+
+// Adds event listeners on modal elements.
+function addModalListeners() {
+    document.querySelector(".projectsModalBackground").addEventListener("click", () => {
+        closeProjectsModal();
+    });
+    document.querySelector(".closeModalButton").addEventListener("click", () => {
+        closeProjectsModal();
+    });
+    document.querySelector(".projectsModal").addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    document.querySelector(".addNewProject").addEventListener("click", () => {
+        console.log("la fonction n'est pas encore crée.");
+    });
+};
+
+// Adds a delete icon to each figure in the modal.
+function addDeleteIcons() {
+    document.querySelectorAll(".projectsModalGallery figure").forEach(el => {
+        el.insertAdjacentHTML("afterbegin", `
+            <div class="deleteIcon"><i class="fa-solid fa-trash-can"></i></div>
+        `)
+    });
 };
 
 function mainFunction() {
