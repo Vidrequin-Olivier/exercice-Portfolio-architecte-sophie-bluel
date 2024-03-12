@@ -350,22 +350,34 @@ button[type="submit"] {
 	background-color: var(--main-background-color);
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	z-index: 10;
+	position: relative;
+}
+
+.backToGallery {
+	width: fit-content;
+	border: none;
+	background: none;
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	display: none;
 }
 
 .closeModalButton {
-	width: 24px;
-	height: 24px;
+	width: fit-content;
+	height: fit-content;
 	border: none;
-	background-color: transparent;
+	background: none;
+	position: absolute;
+	top: 30px;
+	right: 30px;
+}
+
+.projectsGallery {
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
-	position: relative;
-	align-self: flex-end;
-	top: -30px;
-	right: -75px;
 }
 
 .projectsModal h2 {
@@ -402,7 +414,7 @@ button[type="submit"] {
 	background-color: #B3B3B3;
 }
 
-.addNewProject {
+.addNewProjectButton, .modalFormSubmitButton {
 	width: 237px;
 	height: 36px;
 	border: none;
@@ -410,4 +422,99 @@ button[type="submit"] {
 	font-family: var(--main-font);
 	color: var(--main-background-color);
 	background-color: var(--main-color);
+}
+
+.addProjectForm {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+}
+
+.addProjectForm h2 {
+	margin-bottom: 30px;
+}
+
+.photoSelectionBlock {
+	width: 100%;
+	margin-bottom: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #E8F1F6;
+}
+
+.photoSelectionBlock i {
+	margin: 22px 0 12px;
+	font-size: 68px;
+	color: #B9C5CC;
+}
+
+.photoSelectionBlock .photoSelectionButton {
+	margin-bottom: 7px;
+	padding: 10px 33px;
+	border: none;
+	border-radius: 50px;
+	font-family: Work Sans;
+	font-weight: 500;
+	font-size: 14px;
+	color: #306685;
+	background-color: #CBD6DC;
+}
+
+.photoSelectionBlock p {
+	margin-bottom: 20px;
+	font-size: 10px;
+	align-self: center !important;
+}
+
+.addProjectForm label {
+	align-self: flex-start;
+}
+
+#image {
+	display: none;
+}
+
+.addProjectForm input, .addProjectForm .selectCategoryContainer {
+	width: calc(100% - 40px);
+	height: 50px;
+	margin: 10px 0 20px;
+	padding: 0 20px;
+	border: none;
+	color: #444444;
+	box-shadow: var(--box-shadow);
+}
+
+.selectCategoryContainer {
+	width: 100%;
+}
+
+#selectCategory {
+	width: 100%;
+	height: 100%;
+	border: none;
+	color: #444444;
+	background-color: transparent;
+}
+
+.modalFormSubmitButton {
+	background-color: #A7A7A7;
+}
+
+.deleteIcon {
+	width: 17px;
+	height: 17px;
+	background-color: black;
+	border-radius: 2px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 23px;
+	left: 54px;
+	z-index: 11;
+}
+
+.deleteIcon i {
+	color: var(--main-background-color);
 }
