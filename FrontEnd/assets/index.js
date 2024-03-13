@@ -22,8 +22,7 @@ async function fetchWorks() {
 
 // Creates a header banner in edit mode.
 function editingModeBanner() {
-    const body = document.querySelector("body");
-    body.insertAdjacentHTML("beforebegin", `
+    document.querySelector("body").insertAdjacentHTML("beforebegin", `
         <div class="editingModeBanner">
             <p><i class="fa-regular fa-pen-to-square"></i>Mode édition</p>
         </div>`
@@ -39,6 +38,20 @@ function logoutButton() {
         logout();
     });
     return logoutButton;
+};
+
+// Create a "portfolioHeader" container and move the "h2" inside it.
+function moveH2ToPortfolioHeader() {
+    const portfolio = document.querySelector("#portfolio");
+    const h2 = portfolio.querySelector("h2");
+
+    // Créer et insérer le conteneur "portfolioHeader" avant le "h2"
+    const portfolioHeader = document.createElement("div");
+    portfolioHeader.classList.add("portfolioHeader");
+    portfolio.insertBefore(portfolioHeader, h2);
+
+    // Déplacer le "h2" à l'intérieur du conteneur "portfolioHeader"
+    portfolioHeader.appendChild(h2);
 };
 
 // Creates the edit projects button.
@@ -309,12 +322,16 @@ function addProjectForm() {
     document.querySelector(".projectsGallery").insertAdjacentHTML("afterend", `
         <form class="addProjectForm">
             <h2>Ajout photo</h2>
-            <label class="photoSelectionBlock" for="image">
-                <i class="fa-regular fa-image"></i>
-                <p class="photoSelectionButton">+ Ajouter photo</p>
-                <p>jpg, png : 4mo max</p>
-            </label>
-            <input type="file" id="image" accept=".jpg,.png" value="4194304" required>
+
+            <div class="photoSelectionBlockContainer">
+                <img class="photoDisplayed" src="">
+                <label class="photoSelectionBlock" for="image">
+                    <i class="fa-regular fa-image"></i>
+                    <p class="addPhoto">+ Ajouter photo</p>
+                    <p>jpg, png : 4mo max</p>
+                </label>
+                <input type="file" id="image" accept=".jpg,.png" value="4194304" required>
+            </div>
 
             <label for="addPhotoTitle">Titre</label>
             <input type="text" id="addPhotoTitle" required>
@@ -328,6 +345,7 @@ function addProjectForm() {
                     <option value="3">Hotel & restaurant</option>
                 </select>
             </div>
+
             <div class="line"></div>
             <button class="modalFormSubmitButton">Valider</button>
         </form>
@@ -351,6 +369,9 @@ function addModalListeners() {
     document.querySelector(".addNewProjectButton").addEventListener("click", () => {
         addNewProjectButton();
     });
+    document.querySelector("#image").addEventListener("change", () => {
+        newImageSelected();
+    })
 };
 
 // Display the project gallery and hides the project addition form.
@@ -360,11 +381,15 @@ function backToGallery() {
     document.querySelector(".backToGallery").style.display = "none";
 };
 
-// Hide editing projects modal.
+// Hide editing projects modal and clears the input fields of the work addition form.
 function closeProjectsModal() {
     document.querySelector(".projectsModalBackground").style.display = "none";
     document.querySelector(".projectsGallery").style.display = "flex";
     document.querySelector(".addProjectForm").style.display = "none";
+    document.querySelector(".photoSelectionBlock").style.opacity = "1";
+    document.querySelector(".photoDisplayed").src = "";
+    document.querySelector("#addPhotoTitle").value = "";
+    document.querySelector("#selectCategory").value = "";
 };
 
 // Adds a delete icon to each figure in the modal.
@@ -389,9 +414,21 @@ function addNewProjectButton() {
     document.querySelector(".backToGallery").style.display = "block";
 };
 
+// Selecting a new image in the add projects form.
+function newImageSelected() {
+    document.querySelector(".photoSelectionBlock").style.opacity = "0";
+    
+    const input = document.querySelector("#image");
+    const file = input.files[0];
+    const imgURL = URL.createObjectURL(file);
+    const img = document.querySelector(".photoDisplayed");
+    img.src = imgURL;
+};
+
 function mainFunction() {
     fetchWorks();
     editingModeBanner();
+    moveH2ToPortfolioHeader();
     editProjectsButton();
     sortingBar();
     sortingButtonSelector();
