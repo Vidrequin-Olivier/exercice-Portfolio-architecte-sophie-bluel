@@ -67,17 +67,25 @@ function editProjectsButton() {
 
 // Creates and display the sorting bar
 function sortingBar() {
-    const parentElement = document.getElementById("portfolio");
-    const gallery = document.querySelector(".gallery");
-    const sortingBar = document.createElement("div");
-    sortingBar.className = "sortingBar";
-    sortingBar.innerHTML = `
-                            <button class="button">Tous</button>
-                            <button class="button">Objets</button>
-                            <button class="button">Appartements</button>
-                            <button class="button">Hôtels & restaurants</button>
-                        `;
-    parentElement.insertBefore(sortingBar, gallery);
+    document.querySelector(".portfolioHeader").insertAdjacentHTML("afterend", `
+        <div class="sortingBar">
+            <button class="button" id="0">Tous</button>
+        </div>
+    `);
+    const sortingBar = document.querySelector(".sortingBar");
+    const categories = retrieveCategories();
+    categories.forEach( el => sortingBar.innerHTML += `<button class="button" id="${el.id}">${el.name}</button>`);
+};
+
+// Retrieves the different categories from the backend.
+function retrieveCategories() {
+    const works = JSON.parse(window.sessionStorage.getItem("works")) ;
+    const categoryMap = new Map();
+    works.forEach(work => {
+        categoryMap.set(work.category.id, work.category);
+    });
+    const uniqueCategories = Array.from(categoryMap.values());
+    return uniqueCategories;
 };
 
 // Define the selected sorting button on page load and upon click.

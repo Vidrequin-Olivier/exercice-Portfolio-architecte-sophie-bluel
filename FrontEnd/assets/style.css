@@ -255,8 +255,8 @@ main {
 	flex-wrap: wrap;
 }
 
-.sortingBar .button:nth-child(1), .sortingBar .button:nth-child(2) {
-	width: 100px;
+.sortingBar .button {
+	min-width: 100px;
 }
 
 .sortingBar .button:nth-child(3) {
