@@ -182,27 +182,13 @@ function displaySectionTag() {
     loginPage.style.display = "flex";
 };
 
-// Information entered by the user in the login form.
-let userEmailInput = "";
-let userPasswordInput = "";
-
-// Listen for inputs and update the corresponding variables.
-function loginEventListener() {
-    const emailInput = document.getElementById("emailInput");
-    emailInput.addEventListener("change", (e) => {
-        userEmailInput = e.target.value;
-    });
-    const passwordInput = document.getElementById("passwordInput");
-    passwordInput.addEventListener("change", (e) => {
-        userPasswordInput = e.target.value;
-    });
-};
-
-// Form submission management.
-function formSubmission() {
+// Login form submission management.
+function loginFormSubmission() {
     const loginForm = document.querySelector(".loginForm");
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
+        const userEmailInput = document.getElementById("emailInput").value;
+        const userPasswordInput = document.getElementById("passwordInput").value;
         let userInformations = {
             "email": userEmailInput,
             "password": userPasswordInput
@@ -212,7 +198,7 @@ function formSubmission() {
     });
 };
 
-// Sending the connection request upon form submission.
+// Sending the connection request upon login form submission.
 async function connectionAttempt(userInformations) {
     const apiAddress = "http://localhost:5678/api/users/login";
     try {
@@ -230,7 +216,7 @@ async function connectionAttempt(userInformations) {
                 displayConnectedState();
                 break
             case 401:
-                alert("Echec de la requète.");
+                alert("Echec de la requête.");
                 break
             case 404:
                 alert("Nom utilisateur ou mot de passe incorrect.");
@@ -275,6 +261,14 @@ function logout() {
     const editProjectsButton = document.querySelector(".editProjectsButton");
     editProjectsButton.style.display = "none";
     clearInputsEntries();
+};
+
+// Clears the login token on page reload.
+function clearLoginToken() {
+    window.addEventListener('beforeunload', () => {
+        window.sessionStorage.removeItem("loginToken");
+    });
+    
 };
 
 // Switch from "login" to "logout"
@@ -385,6 +379,18 @@ function addModalListeners() {
     document.querySelector("#image").addEventListener("change", () => {
         newImageSelected();
     })
+    document.getElementById("addPhotoTitle").addEventListener("change", () => {
+        IsReadyToSubmit();
+    })
+    document.getElementById("selectCategory").addEventListener("change", () => {
+        IsReadyToSubmit();
+    })
+    document.querySelector(".modalFormSubmitButton").addEventListener("click", (e) => {
+        if (IsReadyToSubmit() === true) {
+            e.preventDefault();
+            submitNewProject();
+        }
+    })
 };
 
 // Display the project gallery and hides the project addition form.
@@ -401,8 +407,10 @@ function closeProjectsModal() {
     document.querySelector(".addProjectForm").style.display = "none";
     document.querySelector(".photoSelectionBlock").style.opacity = "1";
     document.querySelector(".photoDisplayed").src = "";
+    document.getElementById("image").value = "";
     document.querySelector("#addPhotoTitle").value = "";
     document.querySelector("#selectCategory").value = "";
+    IsReadyToSubmit();
 };
 
 // Adds a delete icon to each figure in the modal.
@@ -430,12 +438,64 @@ function addNewProjectButton() {
 // Selecting a new image in the add projects form.
 function newImageSelected() {
     document.querySelector(".photoSelectionBlock").style.opacity = "0";
-    
     const input = document.querySelector("#image");
     const file = input.files[0];
     const imgURL = URL.createObjectURL(file);
     const img = document.querySelector(".photoDisplayed");
     img.src = imgURL;
+    IsReadyToSubmit();
+};
+
+// Checks if all the input fields of the project addition form are completed and changes the color of the submit button accordingly.
+function IsReadyToSubmit() {
+    const modalFormSubmitButton = document.querySelector(".modalFormSubmitButton");
+    if ((document.getElementById("image").value === "") ||
+        (document.getElementById("addPhotoTitle").value === "") ||
+        (document.getElementById("selectCategory").value === "") ) {
+            modalFormSubmitButton.style.backgroundColor = "#A7A7A7";
+            return false;
+    };
+    modalFormSubmitButton.style.backgroundColor = "var(--main-color)";
+    return true;
+};
+
+async function submitNewProject() {
+    const apiAddress = "http://localhost:5678/api/works";
+    const authorization = window.sessionStorage.getItem("loginToken");
+    const image = document.getElementById("image").value;
+    const title = document.getElementById("addPhotoTitle").value;
+    const category = document.getElementById("selectCategory").value;
+    const projet = {"image": image, "title": title, "category": category};
+
+    try {
+        const response = await fetch(apiAddress, {
+            method: "POST",
+            headers: {
+                "accept": "application/json",
+                "Authorization": authorization,
+                "Content-Type": "multipart/form-data"
+            },
+            body: projet
+        });
+        const responseStatus = response.status;
+        switch (responseStatus) {
+            case 201:
+                window.sessionStorage.removeItem("works");
+                mainFunction();
+                break
+            case 400:
+                alert("Echec de la requête.");
+                break
+            case 401:
+                alert("Requête refusée.");
+                break
+            default:
+                alert(`Réponse serveur non valide: ${response.statusText}.`);
+        }
+    } catch (error) {
+        alert(`Une erreur est survenue: ${error.message}.`);
+        return false;
+    };
 };
 
 function mainFunction() {
@@ -446,8 +506,8 @@ function mainFunction() {
     sortingBar();
     createLoginPage();
     pageLayout();
-    loginEventListener();
-    formSubmission();
+    loginFormSubmission();
+    clearLoginToken();
     createProjectsModal();
 };
 

@@ -248,7 +248,6 @@ main {
 }
 
 .sortingBar {
-	width: clamp(1px, 100%, 585px);
 	gap: 10px;
 	display: flex;
 	justify-content: space-between;
@@ -259,16 +258,8 @@ main {
 	min-width: 100px;
 }
 
-.sortingBar .button:nth-child(3) {
-	width: 157px;
-}
-
-.sortingBar .button:nth-child(4) {
-	width: 198px;
-}
-
 .button {
-	padding: 9px 0;
+	padding: 9px 10px;
 	border: 1px solid var(--main-color);
 	border-radius: 60px;
 	color: var(--main-color);
