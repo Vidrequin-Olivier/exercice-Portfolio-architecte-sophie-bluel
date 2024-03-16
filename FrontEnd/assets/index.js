@@ -67,14 +67,19 @@ function editProjectsButton() {
 
 // Creates and display the sorting bar
 function sortingBar() {
-    document.querySelector(".portfolioHeader").insertAdjacentHTML("afterend", `
-        <div class="sortingBar">
-            <button class="button" id="0">Tous</button>
-        </div>
-    `);
-    const sortingBar = document.querySelector(".sortingBar");
-    const categories = retrieveCategories();
-    categories.forEach( el => sortingBar.innerHTML += `<button class="button" id="${el.id}">${el.name}</button>`);
+    if (window.sessionStorage.getItem("works")) {
+        document.querySelector(".portfolioHeader").insertAdjacentHTML("afterend", `
+            <div class="sortingBar">
+                <button class="button" id="0">Tous</button>
+            </div>
+        `);
+        const sortingBar = document.querySelector(".sortingBar");
+        const categories = retrieveCategories();
+        categories.forEach( el => sortingBar.innerHTML += `<button class="button" id="${el.id}">${el.name}</button>`);
+        sortingButtonSelector();
+    } else {
+        setTimeout( () => {sortingBar()}, 500);
+    };
 };
 
 // Retrieves the different categories from the backend.
@@ -309,7 +314,7 @@ function createProjectsModal() {
         displaySelectedCards(0, ".projectsModalGallery");
         addDeleteIcons();
     } else {
-        setTimeout( () => {createProjectsModal()}, 1000);
+        setTimeout( () => {createProjectsModal()}, 500);
     };
 };
 
@@ -439,7 +444,6 @@ function mainFunction() {
     moveH2ToPortfolioHeader();
     editProjectsButton();
     sortingBar();
-    sortingButtonSelector();
     createLoginPage();
     pageLayout();
     loginEventListener();
