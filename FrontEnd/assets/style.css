@@ -277,6 +277,11 @@ main {
 	margin-top: 40px;
 }
 
+.gallery img {
+	height: 407px;
+	object-fit: cover;
+}
+
 .loginPage {
 	width: 100%;
 	margin: 50px 0 250px;

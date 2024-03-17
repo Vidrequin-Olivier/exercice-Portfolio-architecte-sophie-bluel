@@ -424,8 +424,34 @@ function addDeleteIcons() {
 };
 
 // Deletes the project when clicking on the icon.
-function deleteProject(el) {
-    console.log(`élément à supprimer: ${el}`);
+async function deleteProject(el) {
+    const idToDelete = el - 1000;
+    const apiAddress = `http://localhost:5678/api/works/${idToDelete}`;
+    try {
+        const loginToken = JSON.parse(window.sessionStorage.getItem("loginToken"));
+        const response = await fetch(apiAddress, {
+            method: "DELETE",
+            headers: {"accept": "*/*", "Authorization": `Bearer ${loginToken.token}`}
+        });
+        const responseStatus = response.status;
+        switch (responseStatus) {
+            case 204:
+                window.sessionStorage.removeItem("works");
+                break
+            case 401:
+                alert("Requête refusée.");
+                break
+            case 500:
+                alert("Erreur serveur inattendue.");
+                break
+            default:
+                console.log(`réponce du serveur: ${responseStatus}`);
+                alert(`Réponse serveur non valide: ${response.statusText}.`);
+        }
+    } catch (error) {
+        alert(`Une erreur est survenue: ${error.message}.`);
+        return false;
+    };
 
 };
 
@@ -460,6 +486,7 @@ function IsReadyToSubmit() {
     return true;
 };
 
+// Sends a project addition request to the API based on data from the project addition form.
 async function submitNewProject() {
     const apiAddress = "http://localhost:5678/api/works";
     const loginToken = JSON.parse(window.sessionStorage.getItem("loginToken"));
