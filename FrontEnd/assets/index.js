@@ -117,7 +117,7 @@ function displaySelectedCards(buttonCategoryId, target) {
     targetSelector.innerHTML = data
         .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
         .map(card => `
-            <figure>
+            <figure id="${card.id + 1000}">
                 <img src="${card.imageUrl}" alt="${card.title}">
                 <figcaption>${card.title}</figcaption>
             </figure>
@@ -378,19 +378,19 @@ function addModalListeners() {
     });
     document.querySelector("#image").addEventListener("change", () => {
         newImageSelected();
-    })
+    });
     document.getElementById("addPhotoTitle").addEventListener("change", () => {
         IsReadyToSubmit();
-    })
+    });
     document.getElementById("selectCategory").addEventListener("change", () => {
         IsReadyToSubmit();
-    })
+    });
     document.querySelector(".modalFormSubmitButton").addEventListener("click", (e) => {
         if (IsReadyToSubmit() === true) {
             e.preventDefault();
             submitNewProject();
-        }
-    })
+        };
+    });
 };
 
 // Display the project gallery and hides the project addition form.
@@ -419,13 +419,14 @@ function addDeleteIcons() {
         el.insertAdjacentHTML("afterbegin", `
             <div class="deleteIcon"><i class="fa-solid fa-xs fa-trash-can"></i></div>
         `);
-        el.querySelector(".deleteIcon").addEventListener("click", () => deleteProject());
+        el.querySelector(".deleteIcon").addEventListener("click", () => deleteProject(el.id));
     });
 };
 
 // Deletes the project when clicking on the icon.
-function deleteProject() {
-    console.log("la fonction est déclarée mais pas encore écrite.");
+function deleteProject(el) {
+    console.log(`élément à supprimer: ${el}`);
+
 };
 
 // Display the project addition form and hides the project gallery.
@@ -461,33 +462,39 @@ function IsReadyToSubmit() {
 
 async function submitNewProject() {
     const apiAddress = "http://localhost:5678/api/works";
-    const authorization = window.sessionStorage.getItem("loginToken");
-    const image = document.getElementById("image").value;
+    const loginToken = JSON.parse(window.sessionStorage.getItem("loginToken"));
+
+    const image = document.getElementById("image").files[0];
     const title = document.getElementById("addPhotoTitle").value;
     const category = document.getElementById("selectCategory").value;
-    const projet = {"image": image, "title": title, "category": category};
+
+    const project = new FormData();
+    project.append('image', image);
+    project.append('title', title);
+    project.append('category', category);
 
     try {
         const response = await fetch(apiAddress, {
             method: "POST",
             headers: {
                 "accept": "application/json",
-                "Authorization": authorization,
-                "Content-Type": "multipart/form-data"
+                "Authorization": `Bearer ${loginToken.token}`
             },
-            body: projet
+            body: project
         });
         const responseStatus = response.status;
         switch (responseStatus) {
             case 201:
                 window.sessionStorage.removeItem("works");
-                mainFunction();
                 break
             case 400:
                 alert("Echec de la requête.");
                 break
             case 401:
                 alert("Requête refusée.");
+                break
+            case 500:
+                alert("Erreur serveur inattendue.");
                 break
             default:
                 alert(`Réponse serveur non valide: ${response.statusText}.`);
