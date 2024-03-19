@@ -219,7 +219,7 @@ async function connectionAttempt(userInformations) {
                 alert("Echec de la requête.");
                 break
             case 404:
-                alert("Nom utilisateur ou mot de passe incorrect.");
+                alert("Erreur dans l’identifiant ou le mot de passe.");
                 break
             default:
                 alert(`Réponse serveur non valide: ${response.statusText}.`);
@@ -385,7 +385,7 @@ function addModalListeners() {
     document.getElementById("selectCategory").addEventListener("change", () => {
         IsReadyToSubmit();
     });
-    document.querySelector(".modalFormSubmitButton").addEventListener("click", (e) => {
+    document.querySelector(".addProjectForm").addEventListener("submit", (e) => {
         if (IsReadyToSubmit() === true) {
             e.preventDefault();
             submitNewProject();
@@ -406,7 +406,9 @@ function closeProjectsModal() {
     document.querySelector(".projectsGallery").style.display = "flex";
     document.querySelector(".addProjectForm").style.display = "none";
     document.querySelector(".photoSelectionBlock").style.opacity = "1";
-    document.querySelector(".photoDisplayed").src = "";
+    const photoDisplayed = document.querySelector(".photoDisplayed");
+    photoDisplayed.src = "";
+    photoDisplayed.style.display = "none";
     document.getElementById("image").value = "";
     document.querySelector("#addPhotoTitle").value = "";
     document.querySelector("#selectCategory").value = "";
@@ -470,6 +472,7 @@ function newImageSelected() {
     const imgURL = URL.createObjectURL(file);
     const img = document.querySelector(".photoDisplayed");
     img.src = imgURL;
+    img.style.display = "block";
     IsReadyToSubmit();
 };
 

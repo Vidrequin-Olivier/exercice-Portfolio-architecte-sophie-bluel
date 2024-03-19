@@ -277,8 +277,9 @@ main {
 	margin-top: 40px;
 }
 
-.gallery img {
-	height: 407px;
+.gallery img, .projectsModal img {
+	height: 100%;
+	aspect-ratio: 305/407;
 	object-fit: cover;
 }
 
@@ -390,9 +391,11 @@ button[type="submit"] {
 }
 
 .projectsModalGallery {
-	display: flex;
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(76px, auto));
 	justify-content: space-between;
-	flex-wrap: wrap;
+	column-gap: 10px;
 }
 
 .projectsModalGallery figure {
@@ -450,6 +453,7 @@ button[type="submit"] {
 	position: absolute;
 	max-width: 420px;
 	max-height: 173px;
+	display: none;
 }
 
 .photoSelectionBlock {
