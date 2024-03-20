@@ -186,3 +186,357 @@ footer nav ul {
 	margin: 2em
 }
 
+/* My CSS rules */
+:root {
+	--main-background-color: #FFFEF8;
+    --main-color: #1D6154;
+	--main-font: 'Syne';
+	--box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	--modalBabkgroundColor: rgba(0, 0, 0, 0.3);
+	--photoSelectionBackgroundColor: #E8F1F6;
+}
+
+.editingModeBanner {
+	width: 100vw;
+	height: 60px;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	background-color: black;
+}
+
+.editingModeBanner p {
+	color: #FFFFFF;
+}
+
+.editingModeBanner p i, #portfolio i {
+	margin-right: 10px;
+}
+
+body {
+	background-color: var(--main-background-color);
+}
+
+header {
+	flex-wrap: wrap;
+}
+
+main {
+	width: clamp(1px, 100%, 951px);
+	margin: auto;
+}
+
+.logoutButton {
+	display: none;
+}
+
+#portfolio {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.portfolioHeader {
+	position: relative;
+}
+
+.editProjectsButton {
+	position: absolute;
+	right: -120px;
+	top: 10px;
+	display: none;
+}
+
+.sortingBar {
+	gap: 10px;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.sortingBar .button {
+	min-width: 100px;
+}
+
+.button {
+	padding: 9px 10px;
+	border: 1px solid var(--main-color);
+	border-radius: 60px;
+	color: var(--main-color);
+	background-color: transparent;
+	font-size: 16px;
+	font-family: var(--main-font);
+}
+
+.buttonSelected {
+	color: white;
+	background-color: var(--main-color);
+}
+
+.gallery {
+	margin-top: 40px;
+}
+
+.gallery img, .projectsModal img {
+	height: 100%;
+	aspect-ratio: 305/407;
+	object-fit: cover;
+}
+
+.loginPage {
+	width: 100%;
+	margin: 50px 0 250px;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+}
+
+.loginPage h2 {
+	margin: 100px auto 7px;
+}
+
+.loginForm {
+	width: clamp(1px, 100%, 380px);
+	display: flex;
+	flex-direction: column;
+	align-items: baseline;
+}
+
+.loginForm p {
+	margin: 30px 0 7px;
+}
+
+.loginForm input {
+	width: 100%;
+	height: 50px;
+	border: none;
+	box-shadow: var(--box-shadow);
+
+}
+
+button[type="submit"] {
+	width: 180px;
+	margin: 37px auto 28px;
+	align-self: center;
+	background-color: var(--main-color);
+}
+
+.loginPage a {
+	color: black;
+	text-decoration: underline;
+}
+
+.backToMainPage {
+	margin-top: 30px;
+	padding: 9px 20px;
+}
+
+.projectsModalBackground {
+	width: 100vw;
+	height: 100vh;
+	margin: 60px 0 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: var(--modalBabkgroundColor);
+	display: none;
+	justify-content: center;
+	z-index: 9;
+}
+
+.projectsModal {
+	width: clamp(1px, 100%, 420px);
+	height: fit-content;
+	margin: 590px 5vw;
+	padding: 60px 105px 45px;
+	border-radius: 10px;
+	background-color: var(--main-background-color);
+	display: flex;
+	flex-direction: column;
+	z-index: 10;
+	position: relative;
+}
+
+.backToGallery {
+	width: fit-content;
+	border: none;
+	background: none;
+	position: absolute;
+	top: 30px;
+	left: 30px;
+	display: none;
+}
+
+.closeModalButton {
+	width: fit-content;
+	height: fit-content;
+	border: none;
+	background: none;
+	position: absolute;
+	top: 30px;
+	right: 30px;
+}
+
+.projectsGallery {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.projectsModal h2 {
+	margin-bottom: 45px;
+	color: black;
+	font-family: Work Sans;
+	font-weight: 400;
+}
+
+.projectsModalGallery {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(76px, auto));
+	justify-content: space-between;
+	column-gap: 10px;
+}
+
+.projectsModalGallery figure {
+	width: 76px;
+	height: 102px;
+	margin-bottom: 30px;
+}
+
+.projectsModalGallery img {
+	width: 100%;
+}
+
+.projectsModalGallery figcaption {
+	display: none;
+}
+
+.line {
+	width: 100%;
+	height: 1px;
+	margin: 37px 0 38px;
+	background-color: #B3B3B3;
+}
+
+.addNewProjectButton, .modalFormSubmitButton {
+	width: 237px;
+	height: 36px;
+	border: none;
+	border-radius: 60px;
+	font-family: var(--main-font);
+	color: var(--main-background-color);
+	background-color: var(--main-color);
+}
+
+.addProjectForm {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+}
+
+.addProjectForm h2 {
+	margin-bottom: 30px;
+}
+
+.photoSelectionBlockContainer {
+	width: 100%;
+	height: 173px;
+	margin-bottom: 30px;
+	background-color: var(--photoSelectionBackgroundColor);
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
+.photoDisplayed {
+	position: absolute;
+	max-width: 420px;
+	max-height: 173px;
+	display: none;
+}
+
+.photoSelectionBlock {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #E8F1F6;
+}
+
+.photoSelectionBlock i {
+	margin: 22px 0 12px;
+	font-size: 68px;
+	color: #B9C5CC;
+}
+
+.photoSelectionBlock .addPhoto {
+	margin-bottom: 7px;
+	padding: 10px 33px;
+	border: none;
+	border-radius: 50px;
+	font-family: Work Sans;
+	font-weight: 500;
+	font-size: 14px;
+	color: #306685;
+	background-color: #CBD6DC;
+}
+
+.photoSelectionBlock p {
+	margin-bottom: 20px;
+	font-size: 10px;
+	align-self: center !important;
+}
+
+.addProjectForm label {
+	align-self: flex-start;
+}
+
+#image {
+	margin: 0;
+	display: none;
+}
+
+.addProjectForm input, .addProjectForm .selectCategoryContainer {
+	width: calc(100% - 40px);
+	height: 50px;
+	margin: 10px 0 20px;
+	padding: 0 20px;
+	border: none;
+	color: #444444;
+	box-shadow: var(--box-shadow);
+}
+
+.selectCategoryContainer {
+	width: 100%;
+}
+
+#selectCategory {
+	width: 100%;
+	height: 100%;
+	border: none;
+	color: #444444;
+	background-color: transparent;
+}
+
+.modalFormSubmitButton {
+	background-color: #A7A7A7;
+}
+
+.deleteIcon {
+	width: 17px;
+	height: 17px;
+	background-color: black;
+	border-radius: 2px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 23px;
+	left: 54px;
+	z-index: 11;
+}
+
+.deleteIcon i {
+	color: var(--main-background-color);
+}
