@@ -44,24 +44,19 @@ function logoutButton() {
 function moveH2ToPortfolioHeader() {
     const portfolio = document.querySelector("#portfolio");
     const h2 = portfolio.querySelector("h2");
-
-    // Créer et insérer le conteneur "portfolioHeader" avant le "h2"
     const portfolioHeader = document.createElement("div");
     portfolioHeader.classList.add("portfolioHeader");
     portfolio.insertBefore(portfolioHeader, h2);
-
-    // Déplacer le "h2" à l'intérieur du conteneur "portfolioHeader"
     portfolioHeader.appendChild(h2);
 };
 
 // Creates the edit projects button.
 function editProjectsButton() {
-    const mesProjets = document.querySelector("#portfolio h2");
-    mesProjets.insertAdjacentHTML("afterend", '<p class="editProjectsButton"><i class="fa-regular fa-pen-to-square"></i>modifier</p>');
-    const editProjectsButton = document.querySelector(".editProjectsButton");
-    editProjectsButton.addEventListener("click", () => {
-        const projectsModalBackground = document.querySelector(".projectsModalBackground");
-        projectsModalBackground.style.display = "flex";
+    document.querySelector("#portfolio h2").insertAdjacentHTML("afterend",
+        '<p class="editProjectsButton"><i class="fa-regular fa-pen-to-square"></i>modifier</p>'
+    );
+    document.querySelector(".editProjectsButton").addEventListener("click", () => {
+        document.querySelector(".projectsModalBackground").style.display = "flex";
     })
 };
 
@@ -98,10 +93,10 @@ function sortingButtonSelector() {
     const sortingBar = document.querySelector(".sortingBar");
     const buttonsList = sortingBar.querySelectorAll("button");
     buttonsList[0].classList.add("buttonSelected");
-    let buttonCategoryId = 0;
+    // let buttonCategoryId = 0;
     buttonsList.forEach(el => {
-        el.id = buttonCategoryId;
-        buttonCategoryId += 1
+        // el.id = buttonCategoryId;
+        // buttonCategoryId += 1
         el.addEventListener("click", () => {
             buttonsList.forEach(e => e.classList.remove("buttonSelected"));
             el.classList.add("buttonSelected");
@@ -117,7 +112,7 @@ function displaySelectedCards(buttonCategoryId, target) {
     targetSelector.innerHTML = data
         .filter(card => buttonCategoryId == 0 || card.categoryId == buttonCategoryId)
         .map(card => `
-            <figure id="${card.id + 1000}">
+            <figure class="${card.id}">
                 <img src="${card.imageUrl}" alt="${card.title}">
                 <figcaption>${card.title}</figcaption>
             </figure>
@@ -164,28 +159,21 @@ function pageLayout() {
 
 // Display main tag and hides section tag.
 function displayMainTag() {
-    const loginPage = document.querySelector(".loginPage");
-    const loginButton = document.querySelector(".loginButton");
-    const mainTag = document.querySelector("main");
-    loginPage.style.display = "none";
-    loginButton.style.fontWeight = "400";
-    mainTag.style.display = "block";
+    document.querySelector(".loginPage").style.display = "none";
+    document.querySelector(".loginButton").style.fontWeight = "400";
+    document.querySelector("main").style.display = "block";
 };
 
 // Display section tag and hides main tag.
 function displaySectionTag() {
-    const mainTag = document.querySelector("main");
-    const loginButton = document.querySelector(".loginButton");
-    const loginPage = document.querySelector(".loginPage");
-    mainTag.style.display = "none";
-    loginButton.style.fontWeight = "600";
-    loginPage.style.display = "flex";
+    document.querySelector("main").style.display = "none";
+    document.querySelector(".loginButton").style.fontWeight = "600";
+    document.querySelector(".loginPage").style.display = "flex";
 };
 
 // Login form submission management.
 function loginFormSubmission() {
-    const loginForm = document.querySelector(".loginForm");
-    loginForm.addEventListener("submit", (e) => {
+    document.querySelector(".loginForm").addEventListener("submit", (e) => {
         e.preventDefault();
         const userEmailInput = document.getElementById("emailInput").value;
         const userPasswordInput = document.getElementById("passwordInput").value;
@@ -233,56 +221,37 @@ async function connectionAttempt(userInformations) {
 // Changes the display when in edit mode.
 function displayConnectedState() {
     displayMainTag();
-    const editingModeBanner = document.querySelector(".editingModeBanner");
-    editingModeBanner.style.display = "flex"
+    document.querySelector(".editingModeBanner").style.display = "flex";
     loginToLogout();
-    const sortingBar = document.querySelector(".sortingBar");
-    sortingBar.style.display = "none";
-    const editProjectsButton = document.querySelector(".editProjectsButton");
-    editProjectsButton.style.display = "block";
+    document.querySelector(".sortingBar").style.display = "none";
+    document.querySelector(".editProjectsButton").style.display = "block";
 };
 
 // Switch from "login" to "logout"
 function loginToLogout() {
-    const loginButton = document.querySelector(".loginButton");
-    loginButton.style.display = "none";
-    const logoutButton = document.querySelector(".logoutButton");
-    logoutButton.style.display = "inline";
+    document.querySelector(".loginButton").style.display = "none";
+    document.querySelector(".logoutButton").style.display = "inline";
 };
 
 // Logs out the user, deletes login information and displays the home page.
 function logout() {
     window.sessionStorage.removeItem("loginToken");
-    const editingModeBanner = document.querySelector(".editingModeBanner");
-    editingModeBanner.style.display = "none";
+    document.querySelector(".editingModeBanner").style.display = "none";
     logoutToLogin();
-    const sortingBar = document.querySelector(".sortingBar");
-    sortingBar.style.display = "flex";
-    const editProjectsButton = document.querySelector(".editProjectsButton");
-    editProjectsButton.style.display = "none";
+    document.querySelector(".sortingBar").style.display = "flex";
+    document.querySelector(".editProjectsButton").style.display = "none";
     clearInputsEntries();
-};
-
-// Clears the login token on page reload.
-function clearLoginToken() {
-    window.addEventListener('beforeunload', () => {
-        window.sessionStorage.removeItem("loginToken");
-    });
-    
 };
 
 // Switch from "login" to "logout"
 function logoutToLogin() {
-    const logoutButton = document.querySelector(".logoutButton");
-    logoutButton.style.display = "none";
-    const loginButton = document.querySelector(".loginButton");
-    loginButton.style.display = "inline";
+    document.querySelector(".logoutButton").style.display = "none";
+    document.querySelector(".loginButton").style.display = "inline";
 };
 
 // Clear the login form inputs.
 function clearInputsEntries() {
-    const inputEntries = document.querySelectorAll(".loginForm input");
-    inputEntries.forEach( el => {
+    document.querySelectorAll(".loginForm input").forEach( el => {
         el.value = "";
     });
 };
@@ -421,13 +390,13 @@ function addDeleteIcons() {
         el.insertAdjacentHTML("afterbegin", `
             <div class="deleteIcon"><i class="fa-solid fa-xs fa-trash-can"></i></div>
         `);
-        el.querySelector(".deleteIcon").addEventListener("click", () => deleteProject(el.id));
+        el.querySelector(".deleteIcon").addEventListener("click", () => deleteProject(el.className));
     });
 };
 
 // Deletes the project when clicking on the icon.
 async function deleteProject(el) {
-    const idToDelete = el - 1000;
+    const idToDelete = el;
     const apiAddress = `http://localhost:5678/api/works/${idToDelete}`;
     try {
         const loginToken = JSON.parse(window.sessionStorage.getItem("loginToken"));
@@ -438,7 +407,7 @@ async function deleteProject(el) {
         const responseStatus = response.status;
         switch (responseStatus) {
             case 204:
-                window.sessionStorage.removeItem("works");
+                refreshGalleries();
                 break
             case 401:
                 alert("Requête refusée.");
@@ -454,7 +423,22 @@ async function deleteProject(el) {
         alert(`Une erreur est survenue: ${error.message}.`);
         return false;
     };
+};
 
+// Refreshes galleries when adding or removing projects.
+function refreshGalleries() {
+    window.sessionStorage.removeItem("works");
+    closeProjectsModal();
+    fetchWorks();
+    if (window.sessionStorage.getItem("works")) {
+        displaySelectedCards(0, ".projectsModalGallery");
+        addDeleteIcons();
+    } else {
+        setTimeout( () => {
+            displaySelectedCards(0, ".projectsModalGallery");
+            addDeleteIcons();
+        }, 500);
+    };
 };
 
 // Display the project addition form and hides the project gallery.
@@ -515,7 +499,7 @@ async function submitNewProject() {
         const responseStatus = response.status;
         switch (responseStatus) {
             case 201:
-                window.sessionStorage.removeItem("works");
+                refreshGalleries();
                 break
             case 400:
                 alert("Echec de la requête.");
@@ -535,6 +519,17 @@ async function submitNewProject() {
     };
 };
 
+// Maintain connection on page reload.
+function maintainConnection() {
+    if (window.sessionStorage.getItem("loginToken")) {
+        if (window.sessionStorage.getItem("works")) {
+            displayConnectedState();
+        } else {
+            setTimeout( () => {maintainConnection()}, 500);
+        };
+    };
+};
+
 function mainFunction() {
     fetchWorks();
     editingModeBanner();
@@ -544,8 +539,8 @@ function mainFunction() {
     createLoginPage();
     pageLayout();
     loginFormSubmission();
-    clearLoginToken();
     createProjectsModal();
+    maintainConnection();
 };
 
 mainFunction();
