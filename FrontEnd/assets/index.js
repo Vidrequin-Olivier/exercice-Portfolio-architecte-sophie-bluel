@@ -93,10 +93,7 @@ function sortingButtonSelector() {
     const sortingBar = document.querySelector(".sortingBar");
     const buttonsList = sortingBar.querySelectorAll("button");
     buttonsList[0].classList.add("buttonSelected");
-    // let buttonCategoryId = 0;
     buttonsList.forEach(el => {
-        // el.id = buttonCategoryId;
-        // buttonCategoryId += 1
         el.addEventListener("click", () => {
             buttonsList.forEach(e => e.classList.remove("buttonSelected"));
             el.classList.add("buttonSelected");
@@ -152,7 +149,7 @@ function pageLayout() {
     });
     const backToMainPage = document.querySelector(".backToMainPage");
     backToMainPage.addEventListener("click", () => {
-        clearInputsEntries();
+        clearInputsEntries("loginForm");
         displayMainTag();
     });
 };
@@ -240,7 +237,7 @@ function logout() {
     logoutToLogin();
     document.querySelector(".sortingBar").style.display = "flex";
     document.querySelector(".editProjectsButton").style.display = "none";
-    clearInputsEntries();
+    clearInputsEntries("loginForm");
 };
 
 // Switch from "login" to "logout"
@@ -249,17 +246,21 @@ function logoutToLogin() {
     document.querySelector(".loginButton").style.display = "inline";
 };
 
-// Clear the login form inputs.
-function clearInputsEntries() {
-    document.querySelectorAll(".loginForm input").forEach( el => {
+// Clear the form inputs.
+function clearInputsEntries(formClassName) {
+    document.querySelectorAll(`.${formClassName} input`).forEach( el => {
         el.value = "";
     });
+    document.getElementById("image").value = "";
+    document.querySelector("#addPhotoTitle").value = "";
+    document.querySelector("#selectCategory").value = "";
+    document.querySelector(".photoDisplayed").src = "";
 };
 
 // Creates the project editing modal window.
 function createProjectsModal() {
     if (window.sessionStorage.getItem("works")) {
-        document.querySelector("body").insertAdjacentHTML("afterbegin", `
+        document.querySelector(".editingModeBanner").insertAdjacentHTML("afterend", `
             <section class="projectsModalBackground">
                 <div class="projectsModal">
                     <button class="backToGallery">
@@ -316,9 +317,9 @@ function addProjectForm() {
             <div class="selectCategoryContainer">
                 <select id="selectCategory" name="category" required>
                     <option value="" disabled selected hidden></option>
-                    <option value="1">Objet</option>
-                    <option value="2">Appartement</option>
-                    <option value="3">Hotel & restaurant</option>
+                    <option value="1">Objets</option>
+                    <option value="2">Appartements</option>
+                    <option value="3">Hotels & restaurants</option>
                 </select>
             </div>
 
@@ -367,6 +368,9 @@ function backToGallery() {
     document.querySelector(".addProjectForm").style.display = "none";
     document.querySelector(".projectsGallery").style.display = "flex";
     document.querySelector(".backToGallery").style.display = "none";
+    document.querySelector(".photoSelectionBlock").style.opacity = "1";
+    document.querySelector(".photoDisplayed").style.display = "none";
+    clearInputsEntries("addProjectForm");
 };
 
 // Hide editing projects modal and clears the input fields of the work addition form.
@@ -374,13 +378,7 @@ function closeProjectsModal() {
     document.querySelector(".projectsModalBackground").style.display = "none";
     document.querySelector(".projectsGallery").style.display = "flex";
     document.querySelector(".addProjectForm").style.display = "none";
-    document.querySelector(".photoSelectionBlock").style.opacity = "1";
-    const photoDisplayed = document.querySelector(".photoDisplayed");
-    photoDisplayed.src = "";
-    photoDisplayed.style.display = "none";
-    document.getElementById("image").value = "";
-    document.querySelector("#addPhotoTitle").value = "";
-    document.querySelector("#selectCategory").value = "";
+    clearInputsEntries("addProjectForm");
     IsReadyToSubmit();
 };
 
@@ -396,8 +394,7 @@ function addDeleteIcons() {
 
 // Deletes the project when clicking on the icon.
 async function deleteProject(el) {
-    const idToDelete = el;
-    const apiAddress = `http://localhost:5678/api/works/${idToDelete}`;
+    const apiAddress = `http://localhost:5678/api/works/${el}`;
     try {
         const loginToken = JSON.parse(window.sessionStorage.getItem("loginToken"));
         const response = await fetch(apiAddress, {
@@ -407,6 +404,10 @@ async function deleteProject(el) {
         const responseStatus = response.status;
         switch (responseStatus) {
             case 204:
+                const works = JSON.parse(sessionStorage.getItem("works"));
+                const indexToDelete = works.findIndex(work => work.id === el);
+                works.splice(indexToDelete, 1);
+                sessionStorage.setItem("works", JSON.stringify(works));
                 refreshGalleries();
                 break
             case 401:
@@ -427,18 +428,11 @@ async function deleteProject(el) {
 
 // Refreshes galleries when adding or removing projects.
 function refreshGalleries() {
-    window.sessionStorage.removeItem("works");
-    closeProjectsModal();
-    fetchWorks();
-    if (window.sessionStorage.getItem("works")) {
-        displaySelectedCards(0, ".projectsModalGallery");
-        addDeleteIcons();
-    } else {
-        setTimeout( () => {
-            displaySelectedCards(0, ".projectsModalGallery");
-            addDeleteIcons();
-        }, 500);
-    };
+    document.querySelector(".projectsModalGallery").innerHTML = "";
+    displaySelectedCards(0, ".projectsModalGallery");
+    document.querySelector(".gallery").innerHTML = "";
+    displaySelectedCards(0, ".gallery");
+    addDeleteIcons();
 };
 
 // Display the project addition form and hides the project gallery.
@@ -499,7 +493,14 @@ async function submitNewProject() {
         const responseStatus = response.status;
         switch (responseStatus) {
             case 201:
+                const data = await response.json();
+                const addCategory = {id:`${data.categoryId}`, name:`${project.category}`};
+                data.category = addCategory;
+                const works = JSON.parse(window.sessionStorage.getItem("works"));
+                works.push(data);
+                window.sessionStorage.setItem("works", JSON.stringify(works));
                 refreshGalleries();
+                backToGallery();
                 break
             case 400:
                 alert("Echec de la requête.");
@@ -515,6 +516,7 @@ async function submitNewProject() {
         }
     } catch (error) {
         alert(`Une erreur est survenue: ${error.message}.`);
+        console.log(alert);
         return false;
     };
 };
