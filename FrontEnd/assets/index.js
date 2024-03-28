@@ -358,6 +358,16 @@ function addModalListeners() {
     document.querySelector(".addProjectForm").addEventListener("submit", (e) => {
         if (IsReadyToSubmit() === true) {
             e.preventDefault();
+            const imageInput = document.getElementById("image");
+            const fileSizeLimit = 4194304; // 4 MB in bytes
+        
+            if (imageInput.files && imageInput.files[0]) {
+              const file = imageInput.files[0];
+              if (file.size > fileSizeLimit) {
+                alert("Le fichier image est trop volumineux. Taille maximale : 4 Mo");
+                return;
+              }
+            }
             submitNewProject();
         };
     });
