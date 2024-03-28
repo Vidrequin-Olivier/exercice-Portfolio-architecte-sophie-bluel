@@ -141,6 +141,8 @@ function createLoginPage() {
 
 // Display main or section tag and hides the other tag.
 function pageLayout() {
+    document.querySelector("header li:nth-of-type(1)").innerHTML = `<a href="#portfolio">projets</a>`
+    document.querySelector("header li:nth-of-type(2)").innerHTML = `<a href="#contact">contact</a>`
     const loginButton = document.querySelector("header li:nth-of-type(3)");
     loginButton.className = "loginButton"
     loginButton.insertAdjacentElement("afterend", logoutButton());

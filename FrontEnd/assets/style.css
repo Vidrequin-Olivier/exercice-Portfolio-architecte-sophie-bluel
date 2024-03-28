@@ -225,6 +225,16 @@ header {
 	flex-wrap: wrap;
 }
 
+header a {
+	color: black;
+	text-decoration: none;
+}
+
+header li:hover, header a:hover {
+	cursor: pointer;
+	color: #B1663C;
+}
+
 main {
 	width: clamp(1px, 100%, 951px);
 	margin: auto;
